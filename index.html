@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Ping pong IGY</title>
+</head>
+<body>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css"
+      integrity="sha512-mR/b5Y7FRsKqrYZou7uysnOdCIJib/7r5QeJMFvLNHNhtye3xJp1TdJVPLtetkukFn227nKpXD9OjUc09lx97Q=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"/>
+
+
+<div class="container mt-5">
+    <form id="partners_list">
+        <div class="row">
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Entrer la liste des participants" name="partner"  required="required" pattern="[A-Za-z0-9]{1,20}">
+            </div>
+            <div class="col">
+                <button class="btn btn-primary" id="partners_list_button">Ajouter</button>
+            </div>
+        </div>
+    </form>
+    <hr>
+    <button class="btn btn-primary" id="partners_list_button_random">Lancer le choix d'equipe</button>
+    <table class="table table-striped">
+        <thead>
+        <tr id="partner_list_table_thead">
+            <th>Nom des joueurs</th>
+        </tr>
+        <tr id="partner_list_table_thead_final" style="display: none;">
+            <th>Nom de joueur 1</th>
+            <th>Nom de joueur 2</th>
+        </tr>
+        </thead>
+        <tbody id="partner_list_table_tbody">
+        </tbody>
+    </table>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"
+        integrity="sha512-FHZVRMUW9FsXobt+ONiix6Z0tIkxvQfxtCSirkKc5Sb4TKHmqq1dZa8DphF0XqKb3ldLu/wgMa8mT6uXiLlRlw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    $(document).ready(function () {
+        var partner_list = [];
+        $("#partners_list_button").click(function (event) {
+            event.preventDefault();
+            if ($.trim($("input[name='partner']").val()) != "" && $.trim($("input[name='partner']").val()) != null) {
+                partner_list.push($("input[name='partner']").val());
+
+                $('#partner_list_table_tbody').append(
+                    '<tr>\n' +
+                    '<td>'+$("input[name='partner']").val()+'</td>\n' +
+                    '</tr>'
+                );
+                $("input[name='partner']").val("");
+            }
+        });
+
+        $('#partners_list_button_random').click(function () {
+            $("input[name='partner']").attr('disabled', true);
+            $("#partners_list_button").attr('disabled', true);
+            $("#partners_list_button_random").attr('disabled', true);
+
+            $('#partner_list_table_thead').hide();
+            $('#partner_list_table_thead_final').show();
+            $('#partner_list_table_tbody').html('');
+            var partner_list_random = partner_list;
+
+            while (partner_list_random.length >= 1) {
+                if (partner_list_random.length >= 2) {
+
+                    var partner_one = partner_list_random[Math.floor(Math.random() * partner_list_random.length)];
+                    partner_list_random.splice(partner_list_random.indexOf(partner_one), 1);
+
+                    var partner_two = partner_list_random[Math.floor(Math.random() * partner_list_random.length)];
+                    partner_list_random.splice(partner_list_random.indexOf(partner_two), 1);
+
+                    $('#partner_list_table_tbody').append(
+                        '<tr>\n' +
+                        '<td>'+partner_one+'</td>\n' +
+                        '<td>'+partner_two+'</td>\n' +
+                        '</tr>'
+                    );
+                } else {
+                    $('#partner_list_table_tbody').append(
+                        '<tr style="background-color: #9B5442;color: #ffffff;">\n' +
+                        '<td>'+partner_list_random[0]+'</td>\n' +
+                        '<td></td>\n' +
+                        '</tr>'
+                    );
+                    partner_list_random.splice(partner_list_random.indexOf(partner_list_random[0]), 1);
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
